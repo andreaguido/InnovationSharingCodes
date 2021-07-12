@@ -1,0 +1,47 @@
+participant.id_in_session,participant.code,participant.label,participant._is_bot,participant._index_in_pages,participant._max_page_index,participant._current_app_name,participant._current_page_name,participant.ip_address,participant.time_started,participant.visited,participant.mturk_worker_id,participant.mturk_assignment_id,participant.payoff,player.id_in_group,player.name,player.familyname,player.phone,player.email,player.sex,player.student,player.field_of_studies,player.check_partners,player.check_matching,player.check_understanding_incentives,player.check_patterns,player.comments,player.payoff,group.id_in_subsession,subsession.round_number,session.code,session.label,session.experimenter_name,session.mturk_HITId,session.mturk_HITGroupId,session.comment,session.is_demo
+1,mo1x7vgx,,0,303,302,atl_Survey,FinalPage,127.0.0.1,2020-09-21 23:55:53.368347+00:00,1,,,0.0,1,,,,,0,0,,0,0,0,0,,0.0,1,1,jv327n3v,,,,,,1
+2,jor6co25,,0,303,302,atl_Survey,FinalPage,127.0.0.1,2020-09-21 23:55:53.418241+00:00,1,,,0.0,2,,,,,0,0,,0,0,0,0,,0.0,1,1,jv327n3v,,,,,,1
+3,j9cl02db,,0,303,302,atl_Survey,FinalPage,127.0.0.1,2020-09-21 23:55:53.450876+00:00,1,,,0.0,3,,,,,0,0,,0,0,0,0,,0.0,1,1,jv327n3v,,,,,,1
+4,pnxomgje,,0,303,302,atl_Survey,FinalPage,127.0.0.1,2020-09-21 23:55:53.487982+00:00,1,,,0.0,4,,,,,0,0,,0,0,0,0,,0.0,1,1,jv327n3v,,,,,,1
+1,moxqf4o5,,0,302,302,atl_Survey,FinalPage,127.0.0.1,2020-09-22 00:00:08.632487+00:00,1,,,0.0,1,,,,,0,0,,0,0,0,0,,0.0,1,1,xwbpu3gi,,,,,,1
+2,1f8n0ggm,,0,302,302,atl_Survey,FinalPage,127.0.0.1,2020-09-22 00:00:08.676367+00:00,1,,,0.0,2,,,,,0,0,,0,0,0,0,,0.0,1,1,xwbpu3gi,,,,,,1
+3,kv7dha3k,,0,302,302,atl_Survey,FinalPage,127.0.0.1,2020-09-22 00:00:08.712251+00:00,1,,,0.0,3,,,,,0,0,,0,0,0,0,,0.0,1,1,xwbpu3gi,,,,,,1
+4,3kuosrgq,,0,302,302,atl_Survey,FinalPage,127.0.0.1,2020-09-22 00:00:08.747480+00:00,1,,,0.0,4,,,,,0,0,,0,0,0,0,,0.0,1,1,xwbpu3gi,,,,,,1
+1,prcygsee,,0,0,602,,,,,0,,,0.0,1,,,,,,,,,,,,,0.0,1,1,813k8rek,,,,,,1
+2,olf0g5z8,,0,0,602,,,,,0,,,0.0,2,,,,,,,,,,,,,0.0,1,1,813k8rek,,,,,,1
+3,c3uuog25,,0,0,602,,,,,0,,,0.0,3,,,,,,,,,,,,,0.0,1,1,813k8rek,,,,,,1
+4,90lm8aik,,0,0,602,,,,,0,,,0.0,4,,,,,,,,,,,,,0.0,1,1,813k8rek,,,,,,1
+1,dbs76qb7,,0,0,602,,,,,0,,,0.0,1,,,,,,,,,,,,,0.0,1,1,9vshpkq7,,,,,,1
+2,o37cekvg,,0,0,602,,,,,0,,,0.0,2,,,,,,,,,,,,,0.0,1,1,9vshpkq7,,,,,,1
+3,x1tdc5qf,,0,0,602,,,,,0,,,0.0,3,,,,,,,,,,,,,0.0,1,1,9vshpkq7,,,,,,1
+4,6ta3qu6u,,0,0,602,,,,,0,,,0.0,4,,,,,,,,,,,,,0.0,1,1,9vshpkq7,,,,,,1
+1,2epa6dj2,,0,602,602,atl_Survey,FinalPage,10.34.94.34,2020-09-25 11:15:00.458179+00:00,1,,,0.0,1,Léonie,STANTINA,0778386009,leonie.stantina@bsb-education.com,1,1,0,4,0,3,2,,0.0,1,1,7p7f3sgq,,,,,,0
+2,jldpdow6,,0,603,602,atl_Survey,FinalPage,10.12.200.233,2020-09-25 11:15:00.462477+00:00,1,,,0.0,2,THOMAS,CIRAVEGNA,0646552764,thomas.ciravegna@bsb-educatio.com,0,1,1,4,0,3,2,,0.0,1,1,7p7f3sgq,,,,,,0
+3,ssdnriua,,0,603,602,atl_Survey,FinalPage,10.37.86.201,2020-09-25 11:15:00.472330+00:00,1,,,0.0,3,Thibault,KERESTEDJIAN,0615492132,thibault.kerestedjian@bsb-education.com,0,1,0,4,0,3,2,,0.0,1,1,7p7f3sgq,,,,,,0
+4,y5woyt2h,,0,603,602,atl_Survey,FinalPage,10.14.25.48,2020-09-25 11:15:00.501550+00:00,1,,,0.0,4,Julien,Nardi,0781944259,julien.nardi@bsb-education.com,0,1,0,4,0,3,3,,0.0,1,1,7p7f3sgq,,,,,,0
+5,9a447633,,0,603,602,atl_Survey,FinalPage,10.10.68.189,2020-09-25 11:15:00.510302+00:00,1,,,0.0,5,alyssia,nuez,0629221623,alyssiamathieu@icloud.com,1,1,0,4,0,3,1,,0.0,1,1,7p7f3sgq,,,,,,0
+6,o6pp9zg6,,0,603,602,atl_Survey,FinalPage,10.11.191.99,2020-09-25 11:15:00.497041+00:00,1,,,0.0,6,Théodora,BUSANA,0686887198,theodora.busana@hotmail.fr,1,1,0,4,0,3,3,,0.0,1,1,7p7f3sgq,,,,,,0
+7,7sbeg1vg,,0,603,602,atl_Survey,FinalPage,10.34.49.141,2020-09-25 11:15:00.587592+00:00,1,,,0.0,7,Clement,Castanier,0768001727,clement.castanier@bsb-education.com,0,1,1,4,0,3,3,,0.0,1,1,7p7f3sgq,,,,,,0
+8,6rtwdxkg,,0,603,602,atl_Survey,FinalPage,10.10.88.48,2020-09-25 11:15:00.528889+00:00,1,,,0.0,8,Arnau,BIGATA,0651561640,arnau.bigata@bsb-education.com,0,1,0,4,0,3,2,,0.0,1,1,7p7f3sgq,,,,,,0
+9,km4kkzgq,,0,603,602,atl_Survey,FinalPage,10.97.20.110,2020-09-25 11:15:00.532724+00:00,1,,,0.0,9,Charlotte,Baugé,0651315638,charlotte.bauge@bsb-education.com,1,1,0,4,0,3,3,,0.0,1,1,7p7f3sgq,,,,,,0
+10,imi9zicz,,0,602,602,atl_Survey,FinalPage,10.38.231.42,2020-09-25 11:15:00.579902+00:00,1,,,0.0,10,Roxane,Viguier,0687975654,roxaneviguier9@gmail.com,1,1,0,4,0,3,2,,0.0,1,1,7p7f3sgq,,,,,,0
+11,ynvcou1j,,0,603,602,atl_Survey,FinalPage,10.97.20.110,2020-09-25 11:15:00.549587+00:00,1,,,0.0,11,Elise,Willmann,0633154602,elise.willmann@bsb-education.com,1,1,0,4,0,3,1,,0.0,1,1,7p7f3sgq,,,,,,0
+12,dptw8pnq,,0,603,602,atl_Survey,FinalPage,10.8.149.25,2020-09-25 11:15:00.586037+00:00,1,,,0.0,12,Lou-Anais,DUMIRIER,0699886838,lou-anais.dumirier@bsb-education.com,1,1,1,4,0,3,3,,0.0,1,1,7p7f3sgq,,,,,,0
+13,bgyt1gfb,,0,603,602,atl_Survey,FinalPage,10.11.191.99,2020-09-25 11:15:00.612067+00:00,1,,,0.0,13,Lorenza,PEROVAL,0749183438,Lorenza.peroval1@gmail.com,1,1,0,4,0,3,3,,0.0,1,1,7p7f3sgq,,,,,,0
+14,vtb040sf,,0,603,602,atl_Survey,FinalPage,10.39.236.138,2020-09-25 11:15:00.624413+00:00,1,,,0.0,14,Théo,Vuittenez,0652868544,theo.vuittenez@bsb-education.com,0,1,1,4,0,3,3,,0.0,1,1,7p7f3sgq,,,,,,0
+15,azh548q0,,0,603,602,atl_Survey,FinalPage,10.15.161.126,2020-09-25 11:15:00.855881+00:00,1,,,0.0,15,Lauralyne,DEMESMAY,0767076827,lauralyne.demesmay@bsb-education.com,1,1,0,4,0,3,3,,0.0,1,1,7p7f3sgq,,,,,,0
+1,t8d0x62h,,0,603,602,atl_Survey,FinalPage,10.13.244.211,2020-09-25 11:28:43.414798+00:00,1,,,0.0,1,Amandine,CORRAO,0601308748,amandinecorrao@yahoo.fr,1,1,0,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0
+2,g8xq45wh,,0,603,602,atl_Survey,FinalPage,10.37.28.240,2020-09-25 11:28:43.376043+00:00,1,,,0.0,2,Elsa,VIEL,0678348698,elsa.viel@bsb-education.fr,1,1,1,4,0,3,2,,0.0,1,1,rw9484yz,,,,,,0
+3,6ndamu78,,0,603,602,atl_Survey,FinalPage,10.13.247.220,2020-09-25 11:28:43.390361+00:00,1,,,0.0,3,Maxime,Gomes,0616890473,maxime.gomes@bsb-education.com,0,1,1,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0
+4,994r96di,,0,602,602,atl_Survey,FinalPage,10.35.77.100,2020-09-25 11:28:43.384168+00:00,1,,,0.0,4,Clément,Maire,0635264534,maire.clem@gmail.com,0,1,0,4,0,3,1,,0.0,1,1,rw9484yz,,,,,,0
+5,gtoe16hg,,0,603,602,atl_Survey,FinalPage,10.38.231.42,2020-09-25 11:28:43.449330+00:00,1,,,0.0,5,coraline,fons,0782780327,coraline.fons@bsb-education.com,1,1,1,4,0,3,2,,0.0,1,1,rw9484yz,,,,,,0
+6,21jxlw25,,0,602,602,atl_Survey,FinalPage,10.34.94.34,2020-09-25 11:28:43.457840+00:00,1,,,0.0,6,Léa,Deballon,0789595288,lea.deballon@bsb-education.com,1,1,0,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0
+7,zlnjkp7k,,0,603,602,atl_Survey,FinalPage,10.13.247.220,2020-09-25 11:28:43.423884+00:00,1,,,0.0,7,mélodie,dapar,0699771215,melodied25@outlook.fr,1,1,1,4,0,3,2,,0.0,1,1,rw9484yz,,,,,,0
+8,5sf51yyf,,0,602,602,atl_Survey,FinalPage,10.9.82.109,2020-09-25 11:28:43.418568+00:00,1,,,0.0,8,Charles,de Fournoux,0698605293,defournoux.charles@gmail.com,0,1,1,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0
+9,v4w3dwf1,,0,602,602,atl_Survey,FinalPage,10.37.28.240,2020-09-25 11:28:43.479994+00:00,1,,,0.0,9,arlind,morina,0783507985,arlind19@outlook.fr,0,1,1,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0
+10,bbeatecw,,0,602,602,atl_Survey,FinalPage,10.97.20.110,2020-09-25 11:28:43.449720+00:00,1,,,0.0,10,Clotilde,MARTIN,0785482489,clotilde.martin@bsb-education.com,1,1,0,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0
+11,j1imcwf0,,0,603,602,atl_Survey,FinalPage,10.15.190.6,2020-09-25 11:28:43.481238+00:00,1,,,0.0,11,Lancelot,de Mareuil,0659533515,Lancelot.demareuil@yahoo.fr,0,1,0,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0
+12,qwa54h2v,,0,603,602,atl_Survey,FinalPage,10.33.39.40,2020-09-25 11:28:43.498766+00:00,1,,,0.0,12,Maha,NIYA,0769054679,maha.niya@bsb-education.com,1,1,0,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0
+13,973fquhz,,0,603,602,atl_Survey,FinalPage,10.14.25.48,2020-09-25 11:28:43.532916+00:00,1,,,0.0,13,Inès,Vallet,0777464824,ines.vallet@bsb-education.com,1,1,0,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0
+14,whq94i34,,0,603,602,atl_Survey,FinalPage,10.14.25.48,2020-09-25 11:30:12.804253+00:00,1,,,0.0,14,Clémence,KATUTA,0652014769,clem.katuta@hotmail.fr,1,1,0,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0
+15,p5uyzkty,,0,603,602,atl_Survey,FinalPage,10.32.205.200,2020-09-25 11:35:44.441954+00:00,1,,,0.0,15,Jean-Fabrice,DUBOIS,0667613622,jeanfab@gmail.com,0,0,0,4,0,3,3,,0.0,1,1,rw9484yz,,,,,,0

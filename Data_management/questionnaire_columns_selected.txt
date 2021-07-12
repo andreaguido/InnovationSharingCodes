@@ -1,0 +1,1 @@
+participant.label,participant._index_in_pages,participant.payoff,player.id_in_group,player.sex,player.student,player.field_of_studies,player.check_partners,player.check_matching,session.code,session.label,session.is_demo
