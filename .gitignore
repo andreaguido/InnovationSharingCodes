@@ -35,6 +35,7 @@ vignettes/*.pdf
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
 
-# Ignore Archive folder
+# Ignore folders
 Archive/
 Data Innovation sharing/
+LogBook/
