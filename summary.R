@@ -84,6 +84,7 @@ d2=bonus_share %>% group_by(matching) %>% summarise(
 d2$matching <- ifelse(d2$matching==0, "Stranger", "Partner")
 
 t.test(bonus_share$perc_share~bonus_share$matching)
+cohens_d(bonus_share$perc_share~bonus_share$matching)
 
 # barplots
 
@@ -114,6 +115,9 @@ ggplot(data=d1 %>% subset.data.frame(subset = treatment %in% c("P4", "S4")), aes
 t.test(bonus_share_K2$perc_share ~ bonus_share_K2$treatment)
 t.test(bonus_share_K4$perc_share ~ bonus_share_K4$treatment)
 chisq.test(bonus_share$perc_share, bonus_share$treatment)
+cohens_d(bonus_share_K2$perc_share ~ bonus_share_K2$treatment)
+cohens_d(bonus_share_K4$perc_share ~ bonus_share_K4$treatment)
+
 ## ------- distribution plots ----
 #bonus_share_P2 <- bonus_share %>% subset.data.frame(subset = treatment=="P2")
 #bonus_share_S2 <- bonus_share %>% subset.data.frame(subset = treatment=="S2")
