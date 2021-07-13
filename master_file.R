@@ -1,8 +1,12 @@
 # main file that manages ancillary files
-library(rethinking)
 library(plyr)
 library(readr)
 library(dplyr);library(xtable) # xtable only to write tables in latex
+library(ggplot2)
+library(gridExtra)
+library(sjPlot)
+library(sjlabelled)
+library(stargazer)
 rm(list=ls())
 
 # define root directory

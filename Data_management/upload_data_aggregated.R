@@ -1,7 +1,7 @@
 ## Individual-Aggregated data ------ 1 obs per player (aggregated over rounds)
 ## data used for HP1 and HP2
 
-# bonus share is the clean df - No BOTs, only sharing decisions --------------------------
+# bonus share is the clean df including only sharing data (excluding missed decisions) --------------------------
 bonus_share <- df %>% subset.data.frame( subset = (player.bonus_flag==1 & player.BOT_sharing==0),
                                          select=c(session.code,session.label,
                                                   treatment,
@@ -15,55 +15,54 @@ bonus_share <- df %>% subset.data.frame( subset = (player.bonus_flag==1 & player
   summarize(perc_share=mean(player.share_decision), 
             n_sharing= sum(player.share_decision),
             n_bonuses = length(player.bonus_flag), 
-            n_bonuses_received = max(player.accrued_bonuses))
+            n_bonuses_received = max(player.accrued_bonuses) - n_bonuses)
 # add variables to data
-bonus_share$n_bonuses_received <- bonus_share$n_bonuses_received - bonus_share$n_bonuses
 bonus_share$k <- 0
 bonus_share$matching <- 0
 bonus_share$id_matching <- 2
 bonus_share$k <- replace(bonus_share$k, bonus_share$treatment=="P4"|bonus_share$treatment=="S4", 1) # K = 4 , value is 1  
 bonus_share$matching <- replace(bonus_share$matching, bonus_share$treatment=="P4"|bonus_share$treatment=="P2", 1) # P, value is 1
-bonus_share$id_matching <- replace(bonus_share$id_matching, bonus_share$treatment=="P4"|bonus_share$treatment=="P2", 1) # P, value is 1
+#bonus_share$id_matching <- replace(bonus_share$id_matching, bonus_share$treatment=="P4"|bonus_share$treatment=="P2", 1) # P, value is 1
 #bonus_share <- bonus_share %>% group_by(session.code, player_unique_ID) %>% mutate(id_actor = group_indices())
 # order data
-bonus_share <- bonus_share[order(bonus_share$player_unique_ID),]
+#bonus_share <- bonus_share[order(bonus_share$player_unique_ID),]
 # create list for ulam - rethinking package
-bonus_share_all_list <- list(
-  id_session = as.integer(as.factor(bonus_share$session.code)),
-  id_actor = (bonus_share$player_unique_ID),
-  id_treat = as.integer(as.factor(bonus_share$treatment)),
-  k = as.integer(bonus_share$k),
-  matching = as.integer((bonus_share$matching)),
-  id_matching = as.integer((bonus_share$id_matching)),
-  number_of_bonuses = (bonus_share$n_bonuses),
-  number_of_sharing = (bonus_share$n_sharing)
-)
+#bonus_share_all_list <- list(
+#  id_session = as.integer(as.factor(bonus_share$session.code)),
+#  id_actor = (bonus_share$player_unique_ID),
+#  id_treat = as.integer(as.factor(bonus_share$treatment)),
+#  k = as.integer(bonus_share$k),
+#  matching = as.integer((bonus_share$matching)),
+#  id_matching = as.integer((bonus_share$id_matching)),
+#  number_of_bonuses = (bonus_share$n_bonuses),
+#  number_of_sharing = (bonus_share$n_sharing)
+#)
 
 
 # bonus share half is the clean df - No BOTs, only sharing decisions - for the last 15 rounds of the game --------------------------
-bonus_share_half <- df %>% subset.data.frame( subset = (player.bonus_flag==1 & player.BOT_sharing==0 & subsession.round_number >14),
-                                              select=c(session.code,session.label,
-                                                       treatment,
-                                                       subsession.round_number,
-                                                       player.share_decision,
-                                                       player.bonus_flag,
-                                                       player.accrued_bonuses,
-                                                       player_unique_ID)) %>%
-  group_by(treatment,session.label, session.code, player_unique_ID) %>% 
-  summarize(perc_share=mean(player.share_decision), 
-            n_sharing= sum(player.share_decision),
-            n_bonuses = length(player.bonus_flag), 
-            n_bonuses_received = max(player.accrued_bonuses))
-bonus_share_half$n_bonuses_received <- bonus_share_half$n_bonuses_received - bonus_share_half$n_bonuses
-bonus_share_half$k <- 0
-bonus_share_half$matching <- 0
-bonus_share_half$id_matching <- 2
-bonus_share_half$k <- replace(bonus_share_half$k, bonus_share_half$treatment=="P4"|bonus_share_half$treatment=="S4", 1) # K = 4 , value is 1  
-bonus_share_half$matching <- replace(bonus_share_half$matching, bonus_share_half$treatment=="P4"|bonus_share_half$treatment=="P2", 1) # P, value is 1
-bonus_share_half$id_matching <- replace(bonus_share_half$id_matching, bonus_share_half$treatment=="P4"|bonus_share_half$treatment=="P2", 1) # P, value is 1
+#bonus_share_half <- df %>% subset.data.frame( subset = (player.bonus_flag==1 & player.BOT_sharing==0 & subsession.round_number >14),
+#                                              select=c(session.code,session.label,
+#                                                       treatment,
+#                                                       subsession.round_number,
+#                                                       player.share_decision,
+#                                                       player.bonus_flag,
+#                                                       player.accrued_bonuses,
+#                                                       player_unique_ID)) %>%
+#  group_by(treatment,session.label, session.code, player_unique_ID) %>% 
+#  summarize(perc_share=mean(player.share_decision), 
+#            n_sharing= sum(player.share_decision),
+#            n_bonuses = length(player.bonus_flag), 
+#            n_bonuses_received = max(player.accrued_bonuses))
+#bonus_share_half$n_bonuses_received <- bonus_share_half$n_bonuses_received - bonus_share_half$n_bonuses
+#bonus_share_half$k <- 0
+#bonus_share_half$matching <- 0
+#bonus_share_half$id_matching <- 2
+#bonus_share_half$k <- replace(bonus_share_half$k, bonus_share_half$treatment=="P4"|bonus_share_half$treatment=="S4", 1) # K = 4 , value is 1  
+#bonus_share_half$matching <- replace(bonus_share_half$matching, bonus_share_half$treatment=="P4"|bonus_share_half$treatment=="P2", 1) # P, value is #1
+#bonus_share_half$id_matching <- replace(bonus_share_half$id_matching, bonus_share_half$treatment=="P4"|bonus_share_half$treatment=="P2", 1) # P, value is 1
 #bonus_share_half$id_actor <- as.integer(as.factor(bonus_share_half$participant.label))
 # order data
-bonus_share <- bonus_share[order(bonus_share$player_unique_ID),]
+#bonus_share <- bonus_share[order(bonus_share$player_unique_ID),]
 # create list for ulam
 bonus_share_half_list <- list(
   id_session = as.integer(as.factor(bonus_share_half$session.code)),
@@ -86,7 +85,7 @@ bonus_share_longitudinal <- df %>% subset.data.frame( subset = (player.bonus_fla
                                                                player.share_decision,
                                                                player.bonus_flag,
                                                                player.accrued_bonuses))
-bonus_share_longitudinal <- bonus_share_longitudinal %>% group_by(session.code, participant.id_in_session) %>% mutate(id_actor = group_indices())
+bonus_share_longitudinal <- bonus_share_longitudinal %>% group_by(session.code, participant.id_in_session) %>% mutate(id_actor = cur_group_id())
 #bonus_share_longitudinal$id_actor <- as.integer(as.factor(bonus_share_longitudinal$participant.label))
 bonus_share_longitudinal_K2 <- bonus_share_longitudinal %>%subset.data.frame( subset = (treatment=="P2"|treatment=="S2"))
 

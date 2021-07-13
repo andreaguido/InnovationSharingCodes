@@ -16,10 +16,5 @@ df <- all_sessions[,unlist(c.num, use.names = F)]
 # define treatment variable
 df$treatment <- paste(df$subsession.matching, df$subsession.degree, sep="")
 # define unique id for each player
-df <- df %>% mutate(player_unique_ID = group_indices(., session.code, participant.id_in_session))
+df <- df %>% group_by(session.code, participant.id_in_session) %>% mutate(player_unique_ID = cur_group_id())
 rm(all_sessions)
-
-## DEPRECATED CHUNCKS ##
-#import.list <- llply(paste("Data Innovation sharing/game/",sessions_files, sep=""),read_files)
-## unlist files
-#all_sessions2 <- Reduce(function(x,y) rbind.data.frame(x,y), import.list, accumulate=F)
