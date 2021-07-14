@@ -64,16 +64,16 @@ bonus_share$matching <- replace(bonus_share$matching, bonus_share$treatment=="P4
 # order data
 #bonus_share <- bonus_share[order(bonus_share$player_unique_ID),]
 # create list for ulam
-bonus_share_half_list <- list(
-  id_session = as.integer(as.factor(bonus_share_half$session.code)),
-  id_actor = (bonus_share_half$player_unique_ID),
-  id_treat = as.integer(as.factor(bonus_share_half$treatment)),
-  k = as.integer(bonus_share_half$k),
-  matching = as.integer((bonus_share_half$matching)),
-  id_matching = as.integer((bonus_share_half$id_matching)),
-  number_of_bonuses = (bonus_share_half$n_bonuses),
-  number_of_sharing = (bonus_share_half$n_sharing)
-)
+#bonus_share_half_list <- list(
+#  id_session = as.integer(as.factor(bonus_share_half$session.code)),
+#  id_actor = (bonus_share_half$player_unique_ID),
+#  id_treat = as.integer(as.factor(bonus_share_half$treatment)),
+#  k = as.integer(bonus_share_half$k),
+#  matching = as.integer((bonus_share_half$matching)),
+#  id_matching = as.integer((bonus_share_half$id_matching)),
+#  number_of_bonuses = (bonus_share_half$n_bonuses),
+#  number_of_sharing = (bonus_share_half$n_sharing)
+#)
 
 
 ## Longitudinal-Individual data ------ N obs per player (not-aggregated over rounds) -- Used in summary.R ------------------
@@ -84,18 +84,19 @@ bonus_share_longitudinal <- df %>% subset.data.frame( subset = (player.bonus_fla
                                                                participant.id_in_session,
                                                                player.share_decision,
                                                                player.bonus_flag,
-                                                               player.accrued_bonuses))
-bonus_share_longitudinal <- bonus_share_longitudinal %>% group_by(session.code, participant.id_in_session) %>% mutate(id_actor = cur_group_id())
+                                                               player.accrued_bonuses, 
+                                                               player.sex, 
+                                                               player.student, 
+                                                               player.field_of_studies))
+bonus_share_longitudinal <- bonus_share_longitudinal %>% group_by(session.code, participant.id_in_session) %>% mutate(id_actor = cur_group_id()) %>% mutate(decision_number = row_number())
 #bonus_share_longitudinal$id_actor <- as.integer(as.factor(bonus_share_longitudinal$participant.label))
 bonus_share_longitudinal_K2 <- bonus_share_longitudinal %>%subset.data.frame( subset = (treatment=="P2"|treatment=="S2"))
 
 
 
 
-##############  NOT WORKING ###############
-## data used for summary and checks ------------------------------------------
-
 # database of subjects who got checks right ------------------------
+
 source("Analysis Scripts/Others/questionnaire_check.R")
 bonus_share_right <- bonus_share %>% filter(participant.label %in% IDs_right$participant.label)
 ## ------- treatment-level summary
