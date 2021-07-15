@@ -7,6 +7,7 @@ library(gridExtra)
 library(sjPlot)
 library(sjlabelled)
 library(stargazer)
+library(effectsize)
 rm(list=ls())
 
 # define root directory

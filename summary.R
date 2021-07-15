@@ -270,10 +270,6 @@ time_matching <- ggplot(data=bonus_share_longitudinal_matching, aes(x=subsession
 library(arm)
 
 # 1. Partner vs. Stranger (HP1) -----
-# prepare data
-# define variable distinguishing partner vs stranger
-bonus_share_longitudinal$partner <- ifelse(bonus_share_longitudinal$treatment=="S2"|bonus_share_longitudinal$treatment=="S4", 0, 1)
-bonus_share_longitudinal$K <- ifelse(bonus_share_longitudinal$treatment=="S2"|bonus_share_longitudinal$treatment=="P2", 0, 1)
 
 # main models
 model0 <- glmer(player.share_decision~partner + (1|id_actor), data = bonus_share_longitudinal,family=binomial(link="logit"))
@@ -284,8 +280,8 @@ model0.3 <- glmer(player.share_decision~partner + subsession.round_number*partne
 # n. decision of individual instead of round (robustness)
 model0.4 <- glmer(player.share_decision~partner + subsession.round_number*partner + decision_number + partner:decision_number + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal,family=binomial(link="logit"))
   
-# print tables
-tab_model(model0, model0.1, model0.2, model0.3,model0.4, show.ci = 0.95, show.aic = T, show.r2 = F, pred.labels = c("Intercept", "Partner Matching", "Round", "Round*Partner Matching"), transform = NULL)
+# print Table 2 -----------
+#tab_model(model0, model0.1, model0.2, model0.3,model0.4, show.ci = 0.95, show.aic = T, show.r2 = F, pred.labels = c("Intercept", "Partner Matching", "Round", "Round*Partner Matching"), transform = NULL)
 stargazer(model0, model0.1, model0.2, model0.3,
           title = "Logit regression of sharing decisions across Partner and Stranger matching protocols", 
           covariate.labels = c("Partner Matching", "Round", "Round*Partner Matching", "Constant"),
@@ -298,14 +294,11 @@ stargazer(model0, model0.1, model0.2, model0.3,
 
 # 2. Interaction connectivity and partner ----
 #model1 <- glmer(player.share_decision~treatment + player.sex + player.field_of_studies + (1|id_actor), data = bonus_share_longitudinal,family=binomial)
-model1 <- glmer(player.share_decision~partner + partner:K + (1|id_actor), data = bonus_share_longitudinal,family=binomial)
-model1.1 <- glmer(player.share_decision~partner + partner:K + player.sex + player.field_of_studies + (1|id_actor), data = bonus_share_longitudinal,family=binomial)
-model1.2 <- glmer(player.share_decision~partner + partner:K + subsession.round_number + player.sex + player.field_of_studies + (1|id_actor), data = bonus_share_longitudinal,family=binomial)
-#model3 <- glmer(player.share_decision~treatment + subsession.round_number + (1|id_actor), data = bonus_share_longitudinal,family=binomial)
-#model3.1 <- glmer(player.share_decision~treatment + subsession.round_number*treatment + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
+model1 <- glmer(player.share_decision~ partner + partner:K + (1|id_actor), data = bonus_share_longitudinal,family=binomial)
+model1.1 <- glmer(player.share_decision~ partner + partner:K + player.sex + player.field_of_studies + (1|id_actor), data = bonus_share_longitudinal,family=binomial)
+model1.2 <- glmer(player.share_decision~ partner + partner:K + player.sex + player.field_of_studies + subsession.round_number + (1|id_actor), data = bonus_share_longitudinal,family=binomial)
+model1.3 <- glmer(player.share_decision~partner + partner:K + player.sex + player.field_of_studies + subsession.round_number*partner + (1|id_actor), data = bonus_share_longitudinal,family=binomial(link="logit"))
 # n. decision of individual instead of round (robustness)
-model1.3 <- glmer(player.share_decision~partner + partner:K + subsession.round_number + (1|id_actor), data = bonus_share_longitudinal,family=binomial(link="logit"))
-model1.4 <- glmer(player.share_decision~partner + partner:K + subsession.round_number*partner + (1|id_actor), data = bonus_share_longitudinal,family=binomial(link="logit"))
 
 # simulate posteriors -----
 sim_model1 <- coef(sim(model1))
@@ -328,54 +321,49 @@ bonus_share_longitudinal_lag <- bonus_share_longitudinal %>% group_by(id_actor) 
 model4 <- glmer(player.share_decision~treatment + subsession.round_number*treatment + lagged_1_share + lagged_2_share + (1|session.code)+ (1|id_actor), data = bonus_share_longitudinal_lag, family=binomial)
 model5 <- glmer(player.share_decision~partner + subsession.round_number*partner + lagged_1_share + lagged_2_share + (1|session.code)+ (1|id_actor), data = bonus_share_longitudinal_lag, family=binomial)
 
-# main tables
-#tab_model(model0, model0.1, model0.2, show.ci = .95, show.icc = T, show.aic = T, show.r2 = F, show.re.var = T, transform = NULL)
-tab_model(model1, model1.1, model1.2, model1.3, model1.4, show.ci = .95, show.re.var = T, show.icc = F, show.aic = T, show.r2 = F, transform = NULL, pred.labels = c("Intercept", "P4","S2","S4", "Round", "Round*P4", "Round*S2", "Round*S4"), 
-          dv.labels = c("Sharing decision","Sharing decision","Sharing decision"))
-stargazer(model1, model1.1, model1.2, model1.3, model1.4,
+# Print Table 3 -----
+#tab_model(model1, model1.1, model1.2, model1.3, show.ci = .95, show.re.var = T, show.icc = F, show.aic = T, show.r2 = F, transform = NULL, #pred.labels = c("Intercept", "P4","S2","S4", "Round", "Round*P4", "Round*S2", "Round*S4"), 
+#          dv.labels = c("Sharing decision","Sharing decision","Sharing decision"))
+stargazer(model1, model1.1, model1.2, model1.3,
           title = "Mixed Effects Logit regression of sharing decisions across treatments", 
-          #covariate.labels = c("Partner Matching", "Partner Matching * K=4", "Round", "Round*Partner Matching", "Constant"),
+          covariate.labels = c("Partner Matching", "Round", "Partner Matching * K=4", "Round*Partner Matching", "Constant"),
           omit = c("player.sex", "player.field_of_studies"),
           omit.labels = c("Demographics", "Demographics"),
           dep.var.caption = "Sharing decision", align = T, dep.var.labels.include = F, type = "latex", out = "table3.tex")
 
 # change in reference treatment (P4 instead of P2)
-bonus_share_longitudinal2 <- within(bonus_share_longitudinal, treatment <- relevel(as.factor(bonus_share_longitudinal$treatment), ref = 2))
-model1_P4 <- glmer(player.share_decision~treatment + (1|session.code) + (1|id_actor), data = bonus_share_longitudinal2,family=binomial)
-model3_P4 <- glmer(player.share_decision~treatment + subsession.round_number + (1|session.code)+ (1|id_actor), data = bonus_share_longitudinal2,family=binomial)
-model3.1_P4 <- glmer(player.share_decision~treatment + subsession.round_number*treatment + (1|session.code)+ (1|id_actor), data = bonus_share_longitudinal2, family=binomial)
+#bonus_share_longitudinal2 <- within(bonus_share_longitudinal, treatment <- relevel(as.factor(bonus_share_longitudinal$treatment), ref = 2))
+#model1_P4 <- glmer(player.share_decision~treatment + (1|session.code) + (1|id_actor), data = bonus_share_longitudinal2,family=binomial)
+#model3_P4 <- glmer(player.share_decision~treatment + subsession.round_number + (1|session.code)+ (1|id_actor), data = bonus_share_longitudinal2,family=binomial)
+#model3.1_P4 <- glmer(player.share_decision~treatment + subsession.round_number*treatment + (1|session.code)+ (1|id_actor), data = bonus_share_longitudinal2, family=binomial)
 
 # paternoster test to compare S2 from model1 and S4 from model1_P4
-pater <- (as.numeric(fixef(model1)["treatmentS2"])-as.numeric(fixef(model1_P4)["treatmentS4"]))/sqrt(as.numeric(se.fixef(model1)["treatmentS2"]^2) + as.numeric(se.fixef(model1_P4)["treatmentS4"]^2))
-pval_pater <- pnorm(-abs(pater))
+#pater <- (as.numeric(fixef(model1)["treatmentS2"])-as.numeric(fixef(model1_P4)["treatmentS4"]))/sqrt(as.numeric(se.fixef(model1)["treatmentS2"]^2) + as.numeric(se.fixef(model1_P4)["treatmentS4"]^2))
+#pval_pater <- pnorm(-abs(pater))
 
 # create lagged variables and test for autocorrelation
-bonus_share_longitudinal_lag2 <- bonus_share_longitudinal2 %>% group_by(id_actor) %>% mutate(lagged_1_share = lag(player.share_decision, n=1),lagged_2_share = lag(player.share_decision, n=2))
-model4_P4 <- glmer(player.share_decision~treatment + subsession.round_number*treatment + lagged_1_share + lagged_2_share + (1|session.code)+ (1|id_actor), data = bonus_share_longitudinal_lag2, family=binomial)
-tab_model(model1_P4,model3_P4, model3.1_P4, model4_P4, show.ci = F, show.re.var = F, show.icc = F, transform = NULL, show.aic = T)
+#bonus_share_longitudinal_lag2 <- bonus_share_longitudinal2 %>% group_by(id_actor) %>% mutate(lagged_1_share = lag(player.share_decision, n#=1),lagged_2_share = lag(player.share_decision, n=2))
+#model4_P4 <- glmer(player.share_decision~treatment + subsession.round_number*treatment + lagged_1_share + lagged_2_share + (1|session.code#)+ (1|id_actor), data = bonus_share_longitudinal_lag2, family=binomial)
+#tab_model(model1_P4,model3_P4, model3.1_P4, model4_P4, show.ci = F, show.re.var = F, show.icc = F, transform = NULL, show.aic = T)
 
-stargazer(model1, model3, model3.1, model1_P4, model3_P4, model3.1_P4,
-          title = "Mixed Effects Logit regression of sharing decisions across treatments",
-          covariate.labels = c("P4","P2","S2","S4", "Round", "Round*P4", "Round*P2", "Round*S2", "Round*S4", "Constant"),
-          dep.var.caption = "Sharing decision", align = T, dep.var.labels.include = F, type = "latex", out = "table2_all.tex")
-tab_model(model1, model3, model3.1, model1_P4, model3_P4, model3.1_P4,
-          title = "Mixed Effects Logit regression of sharing decisions across treatments",
-          dv.labels = "Sharing decision")
-plot_model(model1, type="pred", title = "Probability of sharing", axis.title = c("Treatment", "Pr(Sharing)"))
-  ## ------- reciprocal behaviour -----
+#stargazer(model1, model3, model3.1, model1_P4, model3_P4, model3.1_P4,
+#          title = "Mixed Effects Logit regression of sharing decisions across treatments",
+#          covariate.labels = c("P4","P2","S2","S4", "Round", "Round*P4", "Round*P2", "Round*S2", "Round*S4", "Constant"),
+#          dep.var.caption = "Sharing decision", align = T, dep.var.labels.include = F, type = "latex", out = "table2_all.tex")
+#tab_model(model1, model3, model3.1, model1_P4, model3_P4, model3.1_P4,
+#          title = "Mixed Effects Logit regression of sharing decisions across treatments",
+#          dv.labels = "Sharing decision")
+#plot_model(model1, type="pred", title = "Probability of sharing", axis.title = c("Treatment", "Pr(Sharing)"))
 
-bonus_share_longitudinal <- bonus_share_longitudinal %>% group_by(id_actor) %>% mutate(lagged_1_accrued = lead(player.accrued_bonuses, n=1),lagged_2_accrued = lead(player.accrued_bonuses, n=2), K = ifelse(treatment== "P4" | treatment == "S4", 4, 2))
-bonus_share_longitudinal <- bonus_share_longitudinal %>% mutate(n_innovations_found = row_number(), n_innov_received = lagged_1_accrued - n_innovations_found)
-ggplot(data=bonus_share_longitudinal, aes(x=n_innov_received, y=player.share_decision))+
-  stat_smooth(aes(colour= treatment), method="lm", se = F)+ xlab("Innovations Received")+ylab("Sharing %")+
-  geom_point(aes(colour= treatment))
+
+## ------- reciprocal behaviour -----
 
 
 ggplot(data=bonus_share_K4, aes(x=n_bonuses_received, y=perc_share))+
   stat_smooth(aes(colour= treatment), se = F, method="lm")+ xlab("Innovations Received")+ylab("Sharing %")+
   geom_point(aes(colour= treatment))
 
-model_rec1 <- lmer(perc_share~n_bonuses_received + n_bonuses_received*treatment + (1|session.code), data = bonus_share_K2)
+model_rec1 <- lmer(perc_share~n_bonuses_received + n_bonuses_received*treatment, data = bonus_share_K2)
 summary(model_rec1)
 
 model_rec2 <- lmer(perc_share~n_bonuses_received + n_bonuses_received*treatment + (1|session.code), data = bonus_share_K4)
@@ -385,9 +373,9 @@ std_var <- function(x){ (mean(x, na.rm=T)-x)/sd(x, na.rm=T)}
 bonus_share_longitudinal <- bonus_share_longitudinal %>% mutate(std_n_innov_received = std_var(n_innov_received))
 model_rec_all0 <- glmer(player.share_decision~ K + n_innov_received*K + (1|session.code) + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
 summary(model_rec_all0)
-model_rec_all1 <- glmer(player.share_decision~ treatment + (1|session.code) + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
+model_rec_all1 <- glmer(player.share_decision~ partner + std_n_innov_received + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
 summary(model_rec_all1)
-model_rec_all2 <- glmer(player.share_decision~ n_innov_received + treatment + (1|session.code) + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
+model_rec_all2 <- glmer(player.share_decision~ partner + std_n_innov_received*partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
 summary(model_rec_all2)
 model_rec_all3 <- glmer(player.share_decision~ n_innov_received*treatment + (1|session.code) + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
 summary(model_rec_all3)

@@ -88,95 +88,104 @@ bonus_share_longitudinal <- df %>% subset.data.frame( subset = (player.bonus_fla
                                                                player.sex, 
                                                                player.student, 
                                                                player.field_of_studies))
-bonus_share_longitudinal <- bonus_share_longitudinal %>% group_by(session.code, participant.id_in_session) %>% mutate(id_actor = cur_group_id()) %>% mutate(decision_number = row_number())
-#bonus_share_longitudinal$id_actor <- as.integer(as.factor(bonus_share_longitudinal$participant.label))
-bonus_share_longitudinal_K2 <- bonus_share_longitudinal %>%subset.data.frame( subset = (treatment=="P2"|treatment=="S2"))
+bonus_share_longitudinal <- bonus_share_longitudinal %>% group_by(session.code, participant.id_in_session) %>% mutate(id_actor = cur_group_id()) %>% arrange(id_actor, subsession.round_number) %>% 
+  mutate(decision_number = row_number(),
+         lagged_1_accrued = lead(player.accrued_bonuses, n=1),
+         lagged_2_accrued = lead(player.accrued_bonuses, n=2),
+         n_innov_received = lagged_1_accrued - decision_number)
+
+# define variable distinguishing partner vs stranger
+bonus_share_longitudinal$partner <- ifelse(bonus_share_longitudinal$treatment=="S2"|bonus_share_longitudinal$treatment=="S4", 0, 1)
+bonus_share_longitudinal$K <- ifelse(bonus_share_longitudinal$treatment=="S2"|bonus_share_longitudinal$treatment=="P2", 0, 1)
+
+#bonus_share_longitudinal_K2 <- bonus_share_longitudinal %>%subset.data.frame( subset = (treatment=="P2"|treatment=="S2"))
 
 
 
 
 # database of subjects who got checks right ------------------------
 
-source("Analysis Scripts/Others/questionnaire_check.R")
-bonus_share_right <- bonus_share %>% filter(participant.label %in% IDs_right$participant.label)
-## ------- treatment-level summary
-bonus_share_right_per_treatment <- bonus_share_right %>% group_by(treatment, id_actor)%>% 
-  summarise(perc_share=mean(perc_share))
-
-bonus_share_right_per_matching <- bonus_share_right %>% group_by(matching)
-
-data.frame(
-  mean_session=tapply(bonus_share_right_per_treatment$perc_share, bonus_share_right_per_treatment$treatment, mean),
-  sd_session=tapply(bonus_share_right_per_treatment$perc_share, bonus_share_right_per_treatment$treatment, sd),
-  median_session = tapply(bonus_share_right_per_treatment$perc_share, bonus_share_right_per_treatment$treatment, median),
-  Max_Sharing=tapply(bonus_share_right_per_treatment$perc_share, bonus_share_right_per_treatment$treatment, max),
-  Min_Sharing=tapply(bonus_share_right_per_treatment$perc_share, bonus_share_right_per_treatment$treatment, min),
-  observations = tapply(bonus_share_right_per_treatment$perc_share, bonus_share_right_per_treatment$treatment, length)
-)
-data.frame(
-  mean_session=tapply(bonus_share_right_per_matching$perc_share, bonus_share_right_per_matching$matching, mean),
-  sd_session=tapply(bonus_share_right_per_matching$perc_share, bonus_share_right_per_matching$matching, sd),
-  median_session = tapply(bonus_share_right_per_matching$perc_share, bonus_share_right_per_matching$matching, median),
-  Max_Sharing=tapply(bonus_share_right_per_matching$perc_share, bonus_share_right_per_matching$matching, max),
-  Min_Sharing=tapply(bonus_share_right_per_matching$perc_share, bonus_share_right_per_matching$matching, min),
-  observations = tapply(bonus_share_right_per_matching$perc_share, bonus_share_right_per_matching$matching, length)
-)
-# boxplots
-ggplot(data=bonus_share_right, aes(x=treatment, y=perc_share))+
-  geom_boxplot()+ylab("% of Sharing")+theme_classic()
-## distribution plots
-bonus_share_right_P2 <- bonus_share_right %>% subset.data.frame(subset = treatment=="P2")
-bonus_share_right_S2 <- bonus_share_right %>% subset.data.frame(subset = treatment=="S2")
-bonus_share_right_P4 <- bonus_share_right %>% subset.data.frame(subset = treatment=="P4")
-bonus_share_right_S4 <- bonus_share_right %>% subset.data.frame(subset = treatment=="S4")
-list_treatments <- list(bonus_share_right_P2,bonus_share_right_P4,bonus_share_right_S2,bonus_share_right_S4)
-plots=list()
-for (i in 1:4) {
-  p <- eval(substitute(
-    ggplot(data = list_treatments[[i]],aes(x=list_treatments[[i]]$perc_share), alpha=0.4)+
-      geom_rug(aes(x = list_treatments[[i]]$perc_share, y = 0), position = position_jitter(height = 0))+ geom_density(color="darkblue", fill="lightblue")+
-      xlab(paste("Treatment", list_treatments[[i]]$treatment[1], sep= " "))+ 
-      geom_vline(aes(xintercept=mean(list_treatments[[i]]$perc_share)),
-                 color="blue", linetype="dashed", size=1) +
-      annotate("rect",xmin=as.numeric(mean_se(list_treatments[[i]]$perc_share))[2], 
-               xmax=as.numeric(mean_se(list_treatments[[i]]$perc_share))[3], ymin=0, ymax=Inf, alpha=.5)+
-      xlim(c(0,1))+ylab("Density")+ theme_classic(), 
-    list(i=i)))
-  print(i)
-  print(p)
-  plots[[i]] <- p
-}
-do.call("grid.arrange", c(plots, ncol=2))
-
-# ------- round-level summary
-bonus_share_longitudinal_right <- bonus_share_longitudinal %>% filter(participant.label %in% IDs_right$participant.label)
-bonus_share_longitudinal_treatment_right <- bonus_share_longitudinal_right %>% group_by(treatment, subsession.round_number)%>% 
-  summarise(perc_share=mean(player.share_decision))
-
-## comparison plots
-plot_1_data <- bonus_share_longitudinal_treatment_right %>% subset.data.frame(subset = treatment=="P2" | treatment=="S2")
-Networks=factor(plot_1_data$treatment)
-time_2 <- ggplot(data=plot_1_data, aes(x=subsession.round_number, y=perc_share))+
-  geom_line(aes(colour=Networks)) + geom_point(aes(col= Networks))+
-  ylim(c(min(bonus_share$perc_share),1))+theme_classic()+xlab("Round")+ylab("% of Sharing")+
-  geom_smooth(method="lm", aes(colour=Networks), se=F)+ ggtitle("A") + theme(legend.title = element_blank(), legend.position = "bottom")
-
-plot_2_data <- bonus_share_longitudinal_treatment_right %>% subset.data.frame(subset = treatment=="P4" | treatment=="S4")
-Networks2=factor(plot_2_data$treatment)
-time_4 <- ggplot(data=plot_2_data, aes(x=subsession.round_number, y=perc_share))+
-  geom_line(aes(colour=Networks2), se=F) + geom_point(aes(col= Networks2))+
-  ylim(c(min(bonus_share$perc_share),1))+theme_classic()+xlab("Round")+ylab("% of Sharing")+
-  geom_smooth(method="lm",aes(colour=factor(Networks2)), se=F)+ ggtitle("B") + theme(legend.title = element_blank(), legend.position = "bottom")
-grid.arrange(time_2, time_4, nrow=1)
+#source("Analysis Scripts/Others/questionnaire_check.R")
+#bonus_share_right <- bonus_share %>% filter(participant.label %in% IDs_right$participant#.label)
+### ------- treatment-level summary
+#bonus_share_right_per_treatment <- bonus_share_right %>% group_by(treatment, id_actor)%#>% 
+#  summarise(perc_share=mean(perc_share))
+#
+#bonus_share_right_per_matching <- bonus_share_right %>% group_by(matching)
+#
+#data.frame(
+#  mean_session=tapply(bonus_share_right_per_treatment$perc_share, #bonus_share_right_per_treatment$treatment, mean),
+#  sd_session=tapply(bonus_share_right_per_treatment$perc_share, #bonus_share_right_per_treatment$treatment, sd),
+#  median_session = tapply(bonus_share_right_per_treatment$perc_share, #bonus_share_right_per_treatment$treatment, median),
+#  Max_Sharing=tapply(bonus_share_right_per_treatment$perc_share, #bonus_share_right_per_treatment$treatment, max),
+#  Min_Sharing=tapply(bonus_share_right_per_treatment$perc_share, #bonus_share_right_per_treatment$treatment, min),
+#  observations = tapply(bonus_share_right_per_treatment$perc_share, #bonus_share_right_per_treatment$treatment, length)
+#)
+#data.frame(
+#  mean_session=tapply(bonus_share_right_per_matching$perc_share, #bonus_share_right_per_matching$matching, mean),
+#  sd_session=tapply(bonus_share_right_per_matching$perc_share, #bonus_share_right_per_matching$matching, sd),
+#  median_session = tapply(bonus_share_right_per_matching$perc_share, #bonus_share_right_per_matching$matching, median),
+#  Max_Sharing=tapply(bonus_share_right_per_matching$perc_share, #bonus_share_right_per_matching$matching, max),
+#  Min_Sharing=tapply(bonus_share_right_per_matching$perc_share, #bonus_share_right_per_matching$matching, min),
+#  observations = tapply(bonus_share_right_per_matching$perc_share, #bonus_share_right_per_matching$matching, length)
+#)
+## boxplots
+#ggplot(data=bonus_share_right, aes(x=treatment, y=perc_share))+
+#  geom_boxplot()+ylab("% of Sharing")+theme_classic()
+### distribution plots
+#bonus_share_right_P2 <- bonus_share_right %>% subset.data.frame(subset = treatment=="P2"#)
+#bonus_share_right_S2 <- bonus_share_right %>% subset.data.frame(subset = treatment=="S2"#)
+#bonus_share_right_P4 <- bonus_share_right %>% subset.data.frame(subset = treatment=="P4"#)
+#bonus_share_right_S4 <- bonus_share_right %>% subset.data.frame(subset = treatment=="S4"#)
+#list_treatments <- list(bonus_share_right_P2,bonus_share_right_P4,bonus_share_right_S2#,bonus_share_right_S4)
+#plots=list()
+#for (i in 1:4) {
+#  p <- eval(substitute(
+#    ggplot(data = list_treatments[[i]],aes(x=list_treatments[[i]]$perc_share), alpha=0.4#)+
+#      geom_rug(aes(x = list_treatments[[i]]$perc_share, y = 0), position = #position_jitter(height = 0))+ geom_density(color="darkblue", fill="lightblue")+
+#      xlab(paste("Treatment", list_treatments[[i]]$treatment[1], sep= " "))+ 
+#      geom_vline(aes(xintercept=mean(list_treatments[[i]]$perc_share)),
+#                 color="blue", linetype="dashed", size=1) +
+#      annotate("rect",xmin=as.numeric(mean_se(list_treatments[[i]]$perc_share))[2], 
+#               xmax=as.numeric(mean_se(list_treatments[[i]]$perc_share))[3], ymin=0, #ymax=Inf, alpha=.5)+
+#      xlim(c(0,1))+ylab("Density")+ theme_classic(), 
+#    list(i=i)))
+#  print(i)
+#  print(p)
+#  plots[[i]] <- p
+#}
+#do.call("grid.arrange", c(plots, ncol=2))
+#
+## ------- round-level summary
+#bonus_share_longitudinal_right <- bonus_share_longitudinal %>% filter(participant.label #%in% IDs_right$participant.label)
+#bonus_share_longitudinal_treatment_right <- bonus_share_longitudinal_right %>% group_by#(treatment, subsession.round_number)%>% 
+#  summarise(perc_share=mean(player.share_decision))
+#
+### comparison plots
+#plot_1_data <- bonus_share_longitudinal_treatment_right %>% subset.data.frame(subset = #treatment=="P2" | treatment=="S2")
+#Networks=factor(plot_1_data$treatment)
+#time_2 <- ggplot(data=plot_1_data, aes(x=subsession.round_number, y=perc_share))+
+#  geom_line(aes(colour=Networks)) + geom_point(aes(col= Networks))+
+#  ylim(c(min(bonus_share$perc_share),1))+theme_classic()+xlab("Round")+ylab("% of #Sharing")+
+#  geom_smooth(method="lm", aes(colour=Networks), se=F)+ ggtitle("A") + theme(legend#.title = element_blank(), legend.position = "bottom")
+#
+#plot_2_data <- bonus_share_longitudinal_treatment_right %>% subset.data.frame(subset = #treatment=="P4" | treatment=="S4")
+#Networks2=factor(plot_2_data$treatment)
+#time_4 <- ggplot(data=plot_2_data, aes(x=subsession.round_number, y=perc_share))+
+#  geom_line(aes(colour=Networks2), se=F) + geom_point(aes(col= Networks2))+
+#  ylim(c(min(bonus_share$perc_share),1))+theme_classic()+xlab("Round")+ylab("% of #Sharing")+
+#  geom_smooth(method="lm",aes(colour=factor(Networks2)), se=F)+ ggtitle("B") + theme#(legend.title = element_blank(), legend.position = "bottom")
+#grid.arrange(time_2, time_4, nrow=1)
 
 ## this list is used in the reciprocity checks --------------------------------
-bonus_share_Partner <- bonus_share %>% 
-  subset.data.frame(
-    subset = (
-      (treatment == "P2" |
-         treatment == "P4")
-    )
-  )
+#bonus_share_Partner <- bonus_share %>% 
+#  subset.data.frame(
+#    subset = (
+#      (treatment == "P2" |
+#         treatment == "P4")
+#    )
+#  )
+#
+#bonus_share_Partner$id_actor <- as.integer(as.factor(bonus_share_Partner$id_actor))
 
-bonus_share_Partner$id_actor <- as.integer(as.factor(bonus_share_Partner$id_actor))
 
