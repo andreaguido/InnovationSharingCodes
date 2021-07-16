@@ -359,29 +359,30 @@ stargazer(model1, model1.1, model1.2, model1.3,
 ## ------- reciprocal behaviour -----
 
 
-ggplot(data=bonus_share_K4, aes(x=n_bonuses_received, y=perc_share))+
-  stat_smooth(aes(colour= treatment), se = F, method="lm")+ xlab("Innovations Received")+ylab("Sharing %")+
-  geom_point(aes(colour= treatment))
+#ggplot(data=bonus_share_K4, aes(x=n_bonuses_received, y=perc_share))+
+#  stat_smooth(aes(colour= treatment), se = F, method="lm")+ xlab("Innovations Received")+ylab("Sharing %")+
+#  geom_point(aes(colour= treatment))
 
-model_rec1 <- lmer(perc_share~n_bonuses_received + n_bonuses_received*treatment, data = bonus_share_K2)
-summary(model_rec1)
+#model_rec1 <- lmer(perc_share~n_bonuses_received + n_bonuses_received*treatment, data = bonus_share_K2)
+#summary(model_rec1)
 
-model_rec2 <- lmer(perc_share~n_bonuses_received + n_bonuses_received*treatment + (1|session.code), data = bonus_share_K4)
-summary(model_rec2)
+#model_rec2 <- lmer(perc_share~n_bonuses_received + n_bonuses_received*treatment + (1|session.code), data = bonus_share_K4)
+#summary(model_rec2)
 
 std_var <- function(x){ (mean(x, na.rm=T)-x)/sd(x, na.rm=T)}
 bonus_share_longitudinal <- bonus_share_longitudinal %>% mutate(std_n_innov_received = std_var(n_innov_received))
-model_rec_all0 <- glmer(player.share_decision~ K + n_innov_received*K + (1|session.code) + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
-summary(model_rec_all0)
-model_rec_all1 <- glmer(player.share_decision~ partner + std_n_innov_received + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
-summary(model_rec_all1)
-model_rec_all2 <- glmer(player.share_decision~ partner + std_n_innov_received*partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
-summary(model_rec_all2)
-model_rec_all3 <- glmer(player.share_decision~ n_innov_received*treatment + (1|session.code) + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
-summary(model_rec_all3)
+model_rec_all0 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
+model_rec_all1 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
+model_rec_all2 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + n_innov_received:K + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
+model_rec_all3 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal %>% subset.data.frame(subset = K == 0), family=binomial)
 
-tab_model(model_rec_all0, show.ci = F, show.re.var = F, show.icc = F, transform = NULL, show.aic = T)
-tab_model(model_rec_all0, model_rec_all3, show.ci = F, show.re.var = F, show.icc = F, transform = NULL, show.aic = T)
+#model_rec_all2 <- glmer(player.share_decision~ partner + std_n_innov_received*partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
+#summary(model_rec_all2)
+#model_rec_all3 <- glmer(player.share_decision~ n_innov_received*treatment + (1|session.code) + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
+#summary(model_rec_all3)
+
+#tab_model(model_rec_all0, show.ci = F, show.re.var = F, show.icc = F, transform = NULL, show.aic = T)
+tab_model(model_rec_all0, model_rec_all1, model_rec_all2, show.ci = F, show.re.var = F, show.icc = F, transform = NULL, show.aic = T)
 stargazer(model_rec_all0, model_rec_all3, 
           title = "Mixed effects Logit models with varying intercepts at the session and individual levels.",
           dep.var.caption   = "Sharing_t", dep.var.labels.include = F, 

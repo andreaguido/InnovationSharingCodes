@@ -90,9 +90,9 @@ bonus_share_longitudinal <- df %>% subset.data.frame( subset = (player.bonus_fla
                                                                player.field_of_studies))
 bonus_share_longitudinal <- bonus_share_longitudinal %>% group_by(session.code, participant.id_in_session) %>% mutate(id_actor = cur_group_id()) %>% arrange(id_actor, subsession.round_number) %>% 
   mutate(decision_number = row_number(),
-         lagged_1_accrued = lead(player.accrued_bonuses, n=1),
-         lagged_2_accrued = lead(player.accrued_bonuses, n=2),
-         n_innov_received = lagged_1_accrued - decision_number)
+         lagged_1_accrued = lag(player.accrued_bonuses, n=1),
+         lagged_2_accrued = lag(player.accrued_bonuses, n=2),
+         n_innov_received = ifelse(decision_number ==1, player.accrued_bonuses, player.accrued_bonuses - decision_number + 1))
 
 # define variable distinguishing partner vs stranger
 bonus_share_longitudinal$partner <- ifelse(bonus_share_longitudinal$treatment=="S2"|bonus_share_longitudinal$treatment=="S4", 0, 1)
