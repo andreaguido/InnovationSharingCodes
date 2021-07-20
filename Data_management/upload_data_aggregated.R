@@ -98,6 +98,9 @@ bonus_share_longitudinal <- bonus_share_longitudinal %>% group_by(session.code, 
 bonus_share_longitudinal$partner <- ifelse(bonus_share_longitudinal$treatment=="S2"|bonus_share_longitudinal$treatment=="S4", 0, 1)
 bonus_share_longitudinal$K <- ifelse(bonus_share_longitudinal$treatment=="S2"|bonus_share_longitudinal$treatment=="P2", 0, 1)
 
+# database for reciprocity -- add innovation received (nominal variable and rescaled by connectivity)
+bonus_share_longitudinal <- bonus_share_longitudinal %>% group_by(K, partner) %>% mutate(std_n_innov_received = rescale(n_innov_received))
+
 #bonus_share_longitudinal_K2 <- bonus_share_longitudinal %>%subset.data.frame( subset = (treatment=="P2"|treatment=="S2"))
 
 

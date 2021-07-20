@@ -369,30 +369,42 @@ stargazer(model1, model1.1, model1.2, model1.3,
 #model_rec2 <- lmer(perc_share~n_bonuses_received + n_bonuses_received*treatment + (1|session.code), data = bonus_share_K4)
 #summary(model_rec2)
 
-std_var <- function(x){ (mean(x, na.rm=T)-x)/sd(x, na.rm=T)}
-bonus_share_longitudinal <- bonus_share_longitudinal %>% mutate(std_n_innov_received = std_var(n_innov_received))
-model_rec_all0 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
-model_rec_all1 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
-model_rec_all2 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + n_innov_received:K + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
-model_rec_k2 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal %>% subset.data.frame(subset = K == 0), family=binomial)
-model_rec_k4 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal %>% subset.data.frame(subset = K == 1), family=binomial)
-model_rec_partner <- glmer(player.share_decision~ sd_n_i_rec + sd_n_i_rec:K + (1|id_actor) + player.sex + player.field_of_studies, data = suca, #bonus_share_longitudinal %>% subset.data.frame(subset = partner == 1), 
-                           family=binomial)
+#std_var <- function(x){ (mean(x, na.rm=T)-x)/sd(x, na.rm=T)}
+#bonus_share_longitudinal <- bonus_share_longitudinal %>% mutate(std_n_innov_received = std_var(n_innov_received))
+# model_rec_all0 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
+# model_rec_all1 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
+# model_rec_all2 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + n_innov_received:K + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
+# model_rec_k2 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal %>% subset.data.frame(subset = K == 0), family=binomial)
+# model_rec_k4 <- glmer(player.share_decision~ n_innov_received + subsession.round_number + n_innov_received:partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal %>% subset.data.frame(subset = K == 1), family=binomial)
+model_rec_partner_0 <- glmer(player.share_decision~ std_n_innov_received + std_n_innov_received:partner + subsession.round_number + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
+model_rec_partner_1 <- glmer(player.share_decision~ std_n_innov_received + std_n_innov_received:K + subsession.round_number + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal %>% subset.data.frame(subset = partner == 1), family=binomial)
+
 #model_rec_all2 <- glmer(player.share_decision~ partner + std_n_innov_received*partner + (1|id_actor) + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
 #summary(model_rec_all2)
 #model_rec_all3 <- glmer(player.share_decision~ n_innov_received*treatment + (1|session.code) + (1|id_actor), data = bonus_share_longitudinal, family=binomial)
 #summary(model_rec_all3)
-model_rec_all_predict <- glm(player.share_decision~ treatment*n_innov_received + subsession.round_number  + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
-ss <- getME(model_rec_all_predict,c("theta","fixef"))
-modelrestarted <- update(model_rec_all_predict,start=ss,control=glmerControl(optCtrl=list(maxfun=2e4))) # no converging issues when restarting
+# model_rec_all_predict <- glm(player.share_decision~ treatment*n_innov_received + subsession.round_number  + player.sex + player.field_of_studies, data = bonus_share_longitudinal, family=binomial)
+# ss <- getME(model_rec_all_predict,c("theta","fixef"))
+# modelrestarted <- update(model_rec_all_predict,start=ss,control=glmerControl(optCtrl=list(maxfun=2e4))) # no converging issues when restarting
 
 #tab_model(model_rec_all0, show.ci = F, show.re.var = F, show.icc = F, transform = NULL, show.aic = T)
-tab_model(model_rec_all0, model_rec_all1, model_rec_all2, model_rec_all3, model_rec_all4, show.ci = F, show.re.var = F, show.icc = F, transform = NULL, show.aic = T)
-stargazer(model_rec_all0, model_rec_all3, 
+tab_model(model_rec_partner_0, model_rec_partner_1, 
+          show.ci = F, 
+          show.re.var = F, 
+          show.icc = F, 
+          transform = NULL, 
+          show.aic = T)
+stargazer(model_rec_partner_0, model_rec_partner_1, 
           title = "Mixed effects Logit models with varying intercepts at the session and individual levels.",
-          dep.var.caption   = "Sharing_t", dep.var.labels.include = F, 
-          covariate.labels = c("K", "N. Innovation received_{t-1}", "K*N. Innovation received_{t-1}", "P4", "S2", "S4", "N. Innovation received_{t-1}*P4", "N. Innovation received_{t-1}*S2", "N. Innovation received_{t-1}*S4"), align=T, type="latex",out="reciprocity.tex")
-plot_model(model_rec_partner, type="pred", terms=c("sd_n_i_rec [all]", "K"), axis.title = c("Number Innovations received t-1", "Probability sharing in t"), title = "")
+          dep.var.caption   = "Sharing_it", 
+          dep.var.labels.include = F,
+          omit = c("player.sex", "player.field_of_studies"),
+          omit.labels = c("Demographics", "Demographics"),
+          covariate.labels = c("N. Innovation received_{t-1}", "Round", "N. Innovation received_{t-1}*Partner", "N. Innovation received_{t-1}*K", "Constant"), 
+          align=T, 
+          type="latex",
+          out="reciprocity.tex")
+plot_model(model_rec_partner, type="pred", terms=c("std_n_innov_received [all]", "K"), axis.title = c("Number Innovations received t-1", "Probability sharing in t"), title = "")
 
 # table 3
 print(xtable(table_b, type="latex"), file = paste(hp1_dir,"table_beta_H1.tex", sep=""))
